@@ -18,7 +18,6 @@ const hash = await bcrypt.hash(plainPassword, 10);
   );
 };
 
-
 // 👇 Call this once to add sample users
 (async () => {
   await seedUser('admin', 'admin123', 'SuperAdmin');
