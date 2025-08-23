@@ -1,0 +1,22 @@
+.audit-log {
+  padding: 20px;
+}
+
+.audit-log h2 {
+  margin-bottom: 15px;
+}
+
+.audit-log table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.audit-log th, .audit-log td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+.audit-log th {
+  background-color: #f4f4f4;
+}

@@ -1,0 +1,14 @@
+.top-bar {
+  position: sticky;
+  top: 0;
+  background-color: #f4f4f4;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ccc;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+}
+.layout-content {
+  padding: 30px;
+}

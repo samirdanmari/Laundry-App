@@ -1,0 +1,12 @@
+<div class="top-bar">
+  <!-- Button to Homepage -->
+  <span><button (click)="dashboard()">HOME</button></span>
+
+  <!-- Button to logout -->
+   <span>Welcome, {{ username }} ({{ role }})</span>
+  <button (click)="logout()">🚪 Logout</button>
+</div>
+
+<div class="layout-content">
+  <router-outlet></router-outlet>
+</div>

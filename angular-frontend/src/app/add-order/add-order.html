@@ -1,0 +1,97 @@
+<div class="order-form">
+  <h3>Add Laundry Order</h3>
+<label for="user">ROOM NO:</label>
+  <input [(ngModel)]="roomNumber" name="roomNumber" placeholder="Room Number" required />
+  <label for="user">CUSTOMER NAME:</label>
+  <input [(ngModel)]="customerName" name="customerName" placeholder="Customer Name" required />
+  <label for="user">CONTACT NUMBER:</label>
+  <input [(ngModel)]="contactNumber" name="contactNumber" placeholder="Contact Number" required />
+  <label for="user">EXPECTED COLLECTION DATE:</label>
+  <input [(ngModel)]="expectedDate" name="expectedDate" type="date" placeholder="Expected Collection Date" required />
+
+ <h4>Add Item</h4>
+<label for="type">Item Type:</label>
+<input [(ngModel)]="newItem.type" name="type" placeholder="Item Type" required />
+<label for="quantity">Quantity:</label>
+<input [(ngModel)]="newItem.quantity" name="quantity" type="number" placeholder="Quantity" required />
+<label for="price">Price:</label>
+<input [(ngModel)]="newItem.price" name="price" type="number" placeholder="Price" required />
+
+<label for="serviceType">Service Type:</label>
+<select [(ngModel)]="newItem.serviceType" name="serviceType" required>
+  <option value="Wash_only">Wash only</option>
+  <option value="Pressing_only">Pressing only</option>
+  <option value="Wash_And_Iron">Wash & Iron</option>
+  <option value="Others">Others</option>
+</select>
+
+<button (click)="addItem()">Add Item</button>
+
+<h4>Payment Info</h4>
+<select [(ngModel)]="paymentMethod">
+  <option value="Cash">Cash</option>
+  <option value="POS">POS</option>
+  <option value="Transfer">Transfer</option>
+</select>
+
+<label>
+  <input type="checkbox" [(ngModel)]="isPaidMarked" />
+  Mark as Paid
+</label>
+
+
+  <ul>
+<li *ngFor="let item of items; let i = index">
+  {{ item.quantity }} × {{ item.type }} [{{ item.serviceType }}] &#64; ₦{{ item.price }} = ₦{{ item.quantity * item.price }}
+  <button (click)="editItem(i)">Edit</button>
+  <button (click)="removeItem(i)">Remove</button>
+</li>
+  </ul>
+
+  <p><strong>Total Amount:</strong> ₦{{ totalAmount }}</p>
+
+  <button (click)="saveOrder()">Save Order</button>
+  <button (click)="resetForm()">🔄 Refresh</button>
+
+  <p *ngIf="message">{{ message }}</p>
+
+  <div *ngIf="showReceipt" class="receipt">
+    <h3>🧾 Laundry Receipt</h3>
+    <p><strong>Merchant Copy</strong></p>
+    <p>Room: {{ roomNumber }}</p>
+    <p>Name: {{ customerName }}</p>
+    <p>Contact: {{ contactNumber }}</p>
+    <p>Date: {{ today }}</p>
+    <p>Expected Collection: {{ expectedDate }}</p>
+    <p>Handled By: {{ user.username }}</p>
+ <ul>
+  <li *ngFor="let item of items">
+    {{ item.quantity }} × {{ item.type }} [{{ item.serviceType }}] &#64; ₦{{ item.price }} = ₦{{ item.quantity * item.price }}
+  </li>
+</ul>
+    <p><strong>Total: ₦{{ totalAmount }}</strong></p>
+    <hr />
+<p>______________________________________________________________</p>
+    
+<p><strong>Customer Copy</strong></p>
+    <h3>🧾 Laundry Receipt</h3>
+    <p><strong>Merchant Copy</strong></p>
+    <p>Room: {{ roomNumber }}</p>
+    <p>Name: {{ customerName }}</p>
+    <p>Contact: {{ contactNumber }}</p>
+    <p>Date: {{ today }}</p>
+    <p>Expected Collection: {{ expectedDate }}</p>
+    <p>Handled By: {{ user.username }}</p>
+ <ul>
+  <li *ngFor="let item of items">
+    {{ item.quantity }} × {{ item.type }} [{{ item.serviceType }}] &#64; ₦{{ item.price }} = ₦{{ item.quantity * item.price }}
+  </li>
+</ul>
+
+    <p><strong>Total: ₦{{ totalAmount }}</strong></p>
+    <hr />
+    <button (click)="printReceipt()">🖨️ Print Receipt</button>
+  </div>
+</div>
+
+

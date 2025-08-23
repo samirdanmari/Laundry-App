@@ -1,0 +1,69 @@
+<div class="role-manager">
+  <h2>👥 User Role Management</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Current Role</th>
+        <th>Last Login</th>
+      <th>Session Duration</th>
+        <th>Assign New Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of usersWithRoles" (click)="openUserModal(user.id)" style="cursor: pointer;">
+  <td>{{ user.username }}</td>
+  <td>{{ user.role || 'None' }}</td>
+        <td>{{ user.last_login ? (user.last_login | date:'short') : 'Never' }}</td>
+      <td>{{ user.session_duration ? (user.session_duration / 60 | number:'1.0-0') + ' min' : '—' }}</td>
+  <td>
+    <select [disabled]="user.role === 'SuperAdmin'" (change)="updateRole(user, $event)">
+      <option *ngFor="let role of availableRoles" [value]="role.name" [selected]="role.name === user.role">
+        {{ role.name }}
+      </option>
+    </select>
+  </td>
+</tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- USER MODAL -->
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal()">×</span>
+    <h3>👤 {{ selectedUser.username }} Management</h3>
+
+    <p><strong>Role:</strong> {{ selectedUser.role }}</p>
+    <p><strong>Permissions:</strong> {{ selectedUser.permissions.join(', ') || 'None' }}</p>
+
+    <label>Change Role</label>
+    <select [(ngModel)]="selectedUser.role">
+      <option *ngFor="let role of availableRoles" [value]="role.name">{{ role.name }}</option>
+    </select>
+    <button (click)="changeUserRole()">Update Role</button>
+
+    <label>New Password</label>
+    <input [(ngModel)]="newPassword" type="password" />
+    <button (click)="changeUserPassword()">Change Password</button>
+
+    <label>Assign Permission</label>
+    <select [(ngModel)]="selectedPermission">
+      <option *ngFor="let perm of ['AddOrder','EditDeleteOrder','ConfirmPayment','GenerateSalesReport']" [value]="perm">{{ perm }}</option>
+    </select>
+    <button (click)="assignPermission()">Assign</button>
+
+    <label>Remove Permission</label>
+    <select [(ngModel)]="selectedPermission">
+      <option *ngFor="let perm of selectedUser.permissions" [value]="perm">{{ perm }}</option>
+    </select>
+    <button (click)="removePermission()">Remove</button>
+
+    <button (click)="deleteUser(selectedUser.id)" class="danger">🗑️ Delete User</button>
+  </div>
+</div>
+
+
+
+

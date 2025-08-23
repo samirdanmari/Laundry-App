@@ -1,0 +1,188 @@
+/* .modal-backdrop {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+}
+
+.modal-content {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 600px;
+  z-index: 1000;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+.modal-content h3 {
+  margin-bottom: 20px;
+  color: #007bff;
+}
+
+.modal-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.modal-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.close-btn {
+  background: #dc3545;
+  color: white;
+} */
+
+.modal-content {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 700px;
+  width: 90%;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  overflow-y: auto;
+  max-height: 90vh;
+  z-index: 1000;
+}
+
+.modal-content h3 {
+  text-align: center;
+  color: #007bff;
+  margin-bottom: 15px;
+}
+
+.modal-content p {
+  margin: 5px 0;
+}
+
+.modal-content h4 {
+  margin-top: 20px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+  font-size: 18px;
+}
+
+ul {
+  padding-left: 20px;
+  margin: 10px 0;
+}
+
+.modal-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.modal-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.close-btn {
+  background: #dc3545;
+  color: #fff;
+}
+
+.receipt-area {
+  margin-top: 30px;
+  padding: 20px;
+  border: 1px dashed #007bff;
+  background: #fefefe;
+  font-family: 'Courier New', Courier, monospace;
+  border-radius: 8px;
+}
+
+.receipt-area h3 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.receipt-area p,
+.receipt-area li {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.receipt-area ul {
+  padding-left: 15px;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .receipt-area, .receipt-area * {
+    visibility: visible;
+  }
+
+  .receipt-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+  }
+
+  .modal-actions {
+    display: none;
+  }
+}
+
+/* edit */
+.order-details {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.order-details input, .order-details select {
+  display: block;
+  margin-bottom: 10px;
+  padding: 8px;
+  width: 100%;
+}
+
+button {
+  margin-right: 10px;
+  padding: 8px 12px;
+}
+
+.danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.admin-actions button {
+  margin-right: 10px;
+  padding: 8px 12px;
+}
+
+.edit-form input, .edit-form select {
+  display: block;
+  margin-bottom: 10px;
+  padding: 8px;
+  width: 100%;
+}
+
+.danger {
+  background-color: #dc3545;
+  color: white;
+}
+

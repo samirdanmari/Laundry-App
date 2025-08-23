@@ -1,0 +1,98 @@
+.report-card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 700px;
+  margin: 20px auto;
+  box-shadow: 0 0 15px rgba(0,0,0,0.05);
+}
+
+.report-card input {
+  margin-right: 10px;
+  padding: 6px;
+}
+
+.report-card button {
+  padding: 6px 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.report-card p {
+  font-size: 15px;
+  margin: 8px 0;
+}
+/* Newly added style */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+table th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+.summary {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+  }
+
+  .print-btn,
+  select,
+  input,
+  button:not(.signature-line) {
+    display: none !important;
+  }
+
+  .report-card {
+    box-shadow: none;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .summary {
+    font-weight: bold;
+    background: none;
+    border: none;
+  }
+
+  .signature-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 60px;
+  }
+
+  .signature-block {
+    text-align: center;
+    width: 30%;
+  }
+
+  .signature-line {
+    border-top: 1px solid #000;
+    padding-top: 5px;
+    margin-top: 40px;
+  }
+
+  @page {
+    margin: 20mm;
+  }
+}

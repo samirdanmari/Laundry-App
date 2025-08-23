@@ -1,0 +1,57 @@
+<div class="orders-card">
+  <h3>🧺 All Laundry Orders</h3>
+      <div class="filters">
+  <input [(ngModel)]="roomFilter" placeholder="Room Number" />
+  <input [(ngModel)]="startDate" type="date" />
+  <input [(ngModel)]="endDate" type="date" />
+  <select [(ngModel)]="paidFilter">
+    <option value="All">All</option>
+    <option value="Paid">Paid</option>
+    <option value="Unpaid">Unpaid</option>
+    <option value="Unconfirmed">Unconfirmed</option>
+  </select>
+</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Room</th>
+        <th>Name</th>
+        <th>Contact</th>
+        <th>Total ₦</th>
+        <th>Paid?</th>
+        <th>Date</th>
+        <th>Expected Collection Date</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let order of filteredOrders" (click)="selectOrder(order)">
+        <td>{{ order.room_number }}</td>
+        <td>{{ order.customer_name }}</td>
+        <td>{{ order.contact_number }}</td>
+        <td>{{ order.total_amount }}</td>
+        <td>
+  <span [ngClass]="{
+    'badge-paid': order.payment_status === 'Paid',
+    'badge-unconfirmed': order.payment_status === 'Unconfirmed',
+    'badge-unpaid': order.payment_status === 'Unpaid'
+  }"> {{ order.payment_status }}
+  </span>
+</td>
+        <td>{{ order.date }}</td>
+        <td>{{ order.expected_date }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="stats-bar">
+  <div>🧾 Unpaid Orders: <strong>{{ unpaidCount }}</strong>-Total: <strong>₦{{ unpaidTotal }}</strong></div>
+  <div>⏳ Unconfirmed Orders: <strong>{{ UnconfirmedCount }}</strong>-Total: <strong>₦{{ unconfirmedTotal }}</strong></div>
+  <div>💰 Total Revenue: <strong>₦{{ totalRevenue.toLocaleString() }}</strong></div>
+</div>
+
+</div>
+<app-order-detail
+  *ngIf="selectedOrder"
+  [order]="selectedOrder"
+  (close)="selectedOrder = null"
+/>

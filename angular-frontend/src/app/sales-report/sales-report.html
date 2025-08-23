@@ -1,0 +1,55 @@
+<div class="report-card">
+  <h3>📅 Sales Report</h3>
+
+  <label for="reportType">Report Type:</label>
+  <select id="reportType" [(ngModel)]="reportType">
+    <option value="daily">🗓️ Daily</option>
+    <option value="range">📆 Date Range</option>
+  </select>
+
+  <input [(ngModel)]="startDate" type="date" placeholder="Start Date" />
+  <input [(ngModel)]="endDate" type="date" placeholder="End Date" />
+  <button (click)="fetchReport()">Generate Report</button>
+
+  <div *ngIf="report">
+    <h4>{{ report.startDate }} → {{ report.endDate }}</h4>
+    <p>🧺 Total Orders: {{ report.totalOrders }}</p>
+    <p>💰 Paid Revenue: ₦{{ report.totalPaid.toLocaleString() }}</p>
+    <p>⏳ Unconfirmed: ₦{{ report.unconfirmedTotal.toLocaleString() }}</p>
+    <p>❌ Unpaid: ₦{{ report.unpaidTotal.toLocaleString() }}</p>
+    <p>📊 Paid Count: {{ report.paidCount }}</p>
+    <p>📈 Avg Daily Revenue: ₦{{ report.avgPerDay.toLocaleString() }}</p>
+  </div>
+
+  <div *ngIf="report?.reportType === 'daily'">
+    <h4>📅 Daily Breakdown</h4>
+    <table>
+      <thead><tr><th>Room</th><th>Name</th><th>Amount (₦)</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let row of report?.table">
+          <td *ngIf="'room' in row">{{ row.room }}</td>
+          <td *ngIf="'name' in row">{{ row.name }}</td>
+          <td>₦{{ row.amount.toLocaleString() }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="report?.reportType === 'range'">
+    <h4>📆 Daily Totals</h4>
+    <table>
+      <thead>
+        <tr><th>Date</th>
+        <th>Amount (₦)</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of report?.table">
+          <td *ngIf="'date' in row">{{ row.date }}</td>
+          <td>₦{{ row.amount.toLocaleString() }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <button (click)="printReport()" class="print-btn">🖨️ Print Report</button>
+
+</div>

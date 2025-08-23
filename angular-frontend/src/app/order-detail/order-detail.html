@@ -1,0 +1,93 @@
+<div class="modal-backdrop" (click)="close.emit()"></div>
+<div class="modal-content">
+  
+  <div class="receipt-area">
+  <h3>🧾 Laundry Receipt</h3>
+  <p><strong>Reprinted Copy</strong></p>
+  <p><strong>Room:</strong> {{ order.room_number }}</p>
+  <p><strong>Name:</strong> {{ order.customer_name }}</p>
+  <p><strong>Contact:</strong> {{ order.contact_number }}</p>
+  <p><strong>Date:</strong> {{ order.date }}</p>
+  <p><strong>Expected:</strong> {{ order.expected_date }}</p>
+  <p><strong>Handled By:</strong> {{ order.created_by }}</p>
+  <ul>
+<ul>
+  <li *ngFor="let item of parsedItems">
+    {{ item.quantity }} × {{ item.type }} [{{ item.serviceType }}] 
+    &#64;₦{{ item.price }} = ₦{{ item.quantity * item.price }}
+  </li>
+</ul>
+<p *ngIf="parsedItems.length === 0">No items found in this order.</p>
+  </ul>
+  <p><strong>Total:</strong> ₦{{ order.total_amount }}</p>
+  <p><strong>Paid:</strong> 
+  {{ order.payment_status === 'Paid' ? '✅ Yes' : 
+     order.payment_status === 'Unconfirmed' ? '⏳ Unconfirmed' : '❌ No' }}
+</p>
+  <p><strong>Reprinted By:</strong> {{ user.username }}</p>
+<p><strong>Reprint Time:</strong> {{ currentTime }}</p>
+<p><strong>Payment Confirmed:</strong> {{ order.payment_confirmed_by }} at {{ order.payment_confirmed_at }}</p>
+  
+</div>
+<div *ngIf="canConfirmPayment()">
+  <h4>Confirm Payment</h4>
+  <select [(ngModel)]="depositChannel">
+    <option value="Main POS">Main POS</option>
+    <option value="Transfer">Bank(Transfer)</option>
+    <option value="Cash">Cash</option>
+  </select>
+  <button (click)="confirmPayment()">💳 Confirm Payment</button>
+</div>
+
+<!-- paid Info -->
+<div *ngIf="order.payment_status === 'Paid'">
+  <p><strong>Deposit Channel:</strong> {{ order.payment_deposit_channel }}</p>
+  <p><strong>Confirmed By:</strong> {{ order.payment_confirmed_by }}</p>
+  <p><strong>Confirmed At:</strong> {{ order.payment_confirmed_at }}</p>
+</div>
+
+  <!-- Admin Controls -->
+  <div *ngIf="caneEditandDeleteOrder() && !editMode" class="admin-actions">
+    <button (click)="enableEdit()">✏️ Edit Order</button>
+    <button (click)="deleteOrder()" class="danger">🗑️ Delete Order</button>
+  </div>
+
+    <!-- Edit Form -->
+  <div *ngIf="editMode" class="edit-form">
+    <h4>✏️ Edit Order</h4>
+
+    <label>Room</label>
+    <input [(ngModel)]="editedOrder.room_number" />
+
+    <label>Customer</label>
+    <input [(ngModel)]="editedOrder.customer_name" />
+
+    <label>Contact</label>
+    <input [(ngModel)]="editedOrder.contact_number" />
+
+    <label>Total</label>
+    <input [(ngModel)]="editedOrder.total_amount" type="number" />
+
+    <label>Status</label>
+    <select [(ngModel)]="editedOrder.payment_status">
+      <option>Unpaid</option>
+      <option>Paid</option>
+      <option>Unconfirmed</option>
+    </select>
+
+    <label>Expected Date</label>
+    <input [(ngModel)]="editedOrder.expected_date" type="date" />
+
+    <button (click)="saveChanges()">💾 Save</button>
+    <button (click)="cancelEdit()">❌ Cancel</button>
+  </div>
+
+  <div class="modal-actions">
+    <button (click)="reprintReceipt()">🖨️ Reprint Receipt</button>
+    <button class="close-btn" (click)="close.emit()">❌ Close</button>
+  </div>
+</div>
+
+
+
+
