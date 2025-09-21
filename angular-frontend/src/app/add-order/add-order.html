@@ -1,11 +1,20 @@
 <div class="order-form">
   <h3>Add Laundry Order</h3>
+  <!-- Customer details column -->
+<div class="customer-details">
+<section style="margin-right: 20px;">
 <label for="user">ROOM NO:</label>
   <input [(ngModel)]="roomNumber" name="roomNumber" placeholder="Room Number" required />
+ </section>
+ <section style="margin-right: 20px;">
   <label for="user">CUSTOMER NAME:</label>
   <input [(ngModel)]="customerName" name="customerName" placeholder="Customer Name" required />
+  </section>
+  <section style="margin-right: 20px;">
   <label for="user">CONTACT NUMBER:</label>
   <input [(ngModel)]="contactNumber" name="contactNumber" placeholder="Contact Number" required />
+</section>
+</div>
   <label for="user">EXPECTED COLLECTION DATE:</label>
   <input [(ngModel)]="expectedDate" name="expectedDate" type="date" placeholder="Expected Collection Date" required />
 
