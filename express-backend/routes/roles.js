@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const db = require('../db');
 const router = express.Router();
 
-// Function to log audit actions
+// audit log  function to be assigne to actions on any targeted route wanted to keep track of
 function logAudit(actorId, targetUserId, action, permission) {
   db.run(
     `INSERT INTO audit_logs (actor_id, target_user_id, action, permission) VALUES (?, ?, ?, ?)`,
@@ -19,7 +19,6 @@ function logAudit(actorId, targetUserId, action, permission) {
 router.post('/add-user', async (req, res) => {
   const { username, password, role } = req.body;
   const hash = await bcrypt.hash(password, 10);
-
   db.run(`INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)`, 
     [username, hash, role], 
     function (err) {
@@ -27,7 +26,6 @@ router.post('/add-user', async (req, res) => {
         console.error('❌ Failed to insert user:', err.message);
         return res.status(500).json({ message: 'User creation failed' });
       }
-
     const userId = this.lastID;
     console.log('✅ User inserted with ID:', userId);
 
@@ -38,7 +36,6 @@ router.post('/add-user', async (req, res) => {
           return res.status(404).json({ message: 'Role not found' });
         }
         console.log(`✅ Role '${role}' found with ID:`, roleRow.id);
-
       db.run(`INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)`, [userId, roleRow.id], err => {
         // if (err) return res.status(500).json({ message: 'Role assignment failed' });
           if (err) {
@@ -52,8 +49,6 @@ router.post('/add-user', async (req, res) => {
   });
 });
 
-
-
 // Get all roles
 router.get('/roles', (req, res) => {
   db.all('SELECT * FROM roles', [], (err, rows) => {
@@ -62,21 +57,17 @@ router.get('/roles', (req, res) => {
   });
 });
 
-
 // Add a new user role assignment
 router.post('/assign-role', (req, res) => {
   const { user_id, role_name } = req.body;
-
   db.get('SELECT id FROM roles WHERE name = ?', [role_name], (err, role) => {
     if (!role) return res.status(404).json({ message: 'Role not found' });
-
     db.run('INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)', [user_id, role.id], function (err) {
       if (err) return res.status(500).json({ message: 'Role assignment failed' });
       res.json({ message: `Assigned role '${role_name}' to user ${user_id}` });
     });
   });
 });
-
 
 router.get('/users-with-roles', (req, res) => {
   db.all(`
@@ -89,7 +80,6 @@ router.get('/users-with-roles', (req, res) => {
     res.json(rows);
   });
 });
-
 
 // user modal
 router.get('/user/:id', (req, res) => {
@@ -180,34 +170,12 @@ router.post('/change-password', async (req, res) => {
 router.delete('/delete-user/:id', (req, res) => {
   const userId = req.params.id;
 
+
   db.run('DELETE FROM users WHERE id = ?', [userId], err => {
     if (err) return res.status(500).json({ message: 'Failed to delete user' });
     res.json({ message: 'User deleted successfully' });
   });
 });
-
-
-// Get audit logs
-router.get('/audit-logs', (req, res) => {
-  db.all(`
-    SELECT 
-      audit_logs.id,
-      actor.username AS actor_name,
-      target.username AS target_name,
-      audit_logs.action,
-      audit_logs.permission,
-      audit_logs.timestamp
-    FROM audit_logs
-    LEFT JOIN users AS actor ON audit_logs.actor_id = actor.id
-    LEFT JOIN users AS target ON audit_logs.target_user_id = target.id
-    ORDER BY audit_logs.timestamp DESC
-  `, [], (err, rows) => {
-    if (err) return res.status(500).json({ message: 'Failed to fetch audit logs' });
-    res.json(rows);
-  });
-});
-
-
 
 
 module.exports = router;

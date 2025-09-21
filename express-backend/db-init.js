@@ -2,9 +2,7 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('laundry.db');
 
 const upgrades = [
-  // { column: 'is_paid', type: 'INTEGER DEFAULT 0' },
   { column: 'payment_status', type: "TEXT DEFAULT 'Unpaid'" },
-  // { column: 'payment_method', type: 'TEXT' },
   { column: 'payment_confirmed_at', type: 'TEXT' },
   { column: 'payment_confirmed_by', type: 'TEXT' },
   { column: 'payment_deposit_channel', type: 'TEXT' }
@@ -29,4 +27,6 @@ db.serialize(() => {
     });
   });
 });
+
+
 

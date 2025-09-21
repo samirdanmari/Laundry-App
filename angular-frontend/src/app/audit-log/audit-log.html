@@ -1,4 +1,25 @@
-<div class="audit-log">
+<h3>📝 Audit Log</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Action</th>
+      <th>Permission</th>
+      <th>Actor</th>
+      <th>Target</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let log of auditLogs">
+      <td>{{ log.action }}</td>
+      <td>{{ log.permission }}</td>
+      <td>{{ log.actor_name }}</td>
+      <td>{{ log.target_name }}</td>
+      <td>{{ log.timestamp }}</td>
+    </tr>
+  </tbody>
+</table>
+<!-- <div class="audit-log">
   <h2>📋 Audit Logs</h2>
 
   <table>
@@ -21,4 +42,4 @@
       </tr>
     </tbody>
   </table>
-</div>
+</div> -->

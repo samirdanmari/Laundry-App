@@ -8,7 +8,7 @@
   <p><strong>Name:</strong> {{ order.customer_name }}</p>
   <p><strong>Contact:</strong> {{ order.contact_number }}</p>
   <p><strong>Date:</strong> {{ order.date }}</p>
-  <p><strong>Expected:</strong> {{ order.expected_date }}</p>
+  <p><strong>Expected Collection Date:</strong> {{ order.expected_date }}</p>
   <p><strong>Handled By:</strong> {{ order.created_by }}</p>
   <ul>
 <ul>
@@ -24,6 +24,14 @@
   {{ order.payment_status === 'Paid' ? '✅ Yes' : 
      order.payment_status === 'Unconfirmed' ? '⏳ Unconfirmed' : '❌ No' }}
 </p>
+<p>
+  <strong>Collection Date:</strong>
+  <span *ngIf="order.collected_at; else noDate">
+    {{ order.collected_at }}
+  </span>
+  <ng-template #noDate>❌ Not yet collected</ng-template>
+</p>
+
   <p><strong>Reprinted By:</strong> {{ user.username }}</p>
 <p><strong>Reprint Time:</strong> {{ currentTime }}</p>
 <p><strong>Payment Confirmed:</strong> {{ order.payment_confirmed_by }} at {{ order.payment_confirmed_at }}</p>
@@ -75,7 +83,7 @@
       <option>Unconfirmed</option>
     </select>
 
-    <label>Expected Date</label>
+    <label>Expected Collection Date</label>
     <input [(ngModel)]="editedOrder.expected_date" type="date" />
 
     <button (click)="saveChanges()">💾 Save</button>

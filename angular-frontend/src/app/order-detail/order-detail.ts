@@ -76,34 +76,40 @@ cancelEdit() {
   this.editMode = false;
   this.editedOrder = { ...this.order };
 }
-
-
 saveChanges() {
-const payload = {
-  ...this.order,
-  customer_name: this.editedOrder.customer_name || this.order.customer_name,
-  contact_number: this.editedOrder.contact_number || this.order.contact_number,
-  room_number: this.editedOrder.room_number || this.order.room_number,
-  total_amount: this.editedOrder.total_amount || this.order.total_amount,
-  expected_date: this.editedOrder.expected_date || this.order.expected_date,
-  payment_status: this.editedOrder.payment_status || this.order.payment_status,
-  items: JSON.stringify(this.parsedItems)
-};
+  const payload = {
+    // Use camelCase field names to match your backend
+    customerName: this.editedOrder.customer_name || this.order.customer_name,
+    contactNumber: this.editedOrder.contact_number || this.order.contact_number,
+    roomNumber: this.editedOrder.room_number || this.order.room_number,
+    totalAmount: this.editedOrder.total_amount || this.order.total_amount,
+    expectedDate: this.editedOrder.expected_date || this.order.expected_date,
+    payment_status: this.editedOrder.payment_status || this.order.payment_status,
+    payment_method: this.order.payment_method, // Don't forget this field!
+    items: this.parsedItems // Send as array, let backend stringify it
+  };
 
   this.http.put(`http://localhost:3000/api/orders/${this.order.id}`, payload)
     .subscribe({
       next: res => {
         alert('Order updated');
-        this.order = { ...payload };
-        this.editedOrder = JSON.parse(JSON.stringify(this.order));
-        this.parsedItems = JSON.parse(payload.items); 
+        // Update your local data properly
+        this.order = { 
+          ...this.order, 
+          customer_name: payload.customerName,
+          contact_number: payload.contactNumber,
+          room_number: payload.roomNumber,
+          total_amount: payload.totalAmount,
+          expected_date: payload.expectedDate,
+          payment_status: payload.payment_status,
+          items: this.parsedItems // Keep as array
+        };
+        this.editedOrder = { ...this.order };
         this.editMode = false;
-        // this.isAdmin = localStorage.getItem('role') === 'SuperAdmin';
       },
       error: () => alert('Failed to update order')
     });
 }
-
 
   
   // Delete Order

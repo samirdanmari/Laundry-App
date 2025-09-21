@@ -2,10 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./db'); // SQLite connection
 
-const authRoutes = require('./routes/auth'); // Authentication routes
-const orderRoutes = require('./routes/orders');
-const userRoutes = require('./routes/roles'); // User management routes
 
+const authRoutes = require('./routes/auth'); // Authentication routes
+const orderRoutes = require('./routes/orders'); // Order management routess
+const userRoutes = require('./routes/roles'); // User management routes
+const auditLogRoutes = require('./routes/audit-log'); // Audit log routes
 
 const app = express();
 app.use(cors());
@@ -89,6 +90,12 @@ db.run(`
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
   )
 `);
+// 
+
+// Tobe uncommented if the collected feature is not shown in the future
+// db.run(`ALTER TABLE orders ADD COLUMN collected INTEGER DEFAULT 0`);
+// db.run(`ALTER TABLE orders ADD COLUMN collected_at TEXT`);
+
 // 💡 Create Permission table if not exists
 const defaultPermissions = [
   'AddOrder',
@@ -97,7 +104,7 @@ const defaultPermissions = [
   'GenerateSalesReport'
 ];
 
-// 💡 Create default roles if they don't exist
+// Create default roles if they don't exist
 const defaultRoles = [
   'SuperAdmin',
   'Staff',
@@ -112,6 +119,7 @@ defaultRoles.forEach(role => {
     console.log('✅ Default roles created or already exist.');
   }
 });
+
 // 💡 Create default permissions if they don't exist
 defaultPermissions.forEach(permission => {
   db.run('INSERT OR IGNORE INTO permissions (name) VALUES (?)', [permission]);
@@ -123,7 +131,8 @@ defaultPermissions.forEach(permission => {
   }
 }
 );
-// 💡 Create audit logs table
+
+
 db.run(`
   CREATE TABLE IF NOT EXISTS audit_logs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -137,15 +146,17 @@ db.run(`
   )
 `);
 
-
 // Routes
+
 //login route
 app.use('/api', authRoutes);
 //orders route
 app.use('/api/orders', orderRoutes);
-
 //users route
 app.use('/api/roles', userRoutes);
+
+//audit log route
+app.use('/api/audit-log', auditLogRoutes);
 
 app.listen(3000, () => {
   console.log('Express server running on http://localhost:3000');

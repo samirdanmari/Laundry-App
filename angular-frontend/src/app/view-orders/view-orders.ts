@@ -18,7 +18,7 @@ import { MatPaginator } from '@angular/material/paginator';
   styleUrl: './view-orders.css'
 })
 export class ViewOrders  implements OnInit{
-    displayedColumns: string[] = ['room', 'name', 'contact', 'total', 'status', 'date', 'expected'];
+  displayedColumns: string[] = ['room', 'name', 'contact', 'total', 'status', 'date', 'expected', 'actions'];
   dataSource = new MatTableDataSource<any>();
   orders: any[] = [];
   selectedOrder: any = null;
@@ -26,12 +26,19 @@ export class ViewOrders  implements OnInit{
   startDate = '';
   endDate = '';
   paidFilter = 'All'; // All, Paid, Unpaid
+  user: any = { username: '' }; // Add this property and initialize as needed
 
   // ViewChild to access MatPaginator
     @ViewChild(MatPaginator) paginator!: MatPaginator;
   
     //Inject HttpClient to make API calls 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    //retrieve user from localStorage
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      this.user = JSON.parse(storedUser);
+    }
+  }
 
   ngOnInit() {
     this.fetchOrders();
@@ -45,6 +52,33 @@ export class ViewOrders  implements OnInit{
         err => console.error('Failed to fetch orders:', err)
       );
     }
+
+    // Confirm Collection of Order Method
+
+confirmCollected(order: any) {
+  const actorId = JSON.parse(sessionStorage.getItem('user') || '{}').id;
+
+  this.http.post(`http://localhost:3000/api/orders/confirm-collected/${order.id}`, {
+    actorId
+  }).subscribe({
+    next: () => {
+      order.collected = true;
+      alert('Order marked as collected');
+    },
+    error: () => alert('Failed to confirm collection')
+  });
+}
+// confirmCollected(order: any) {
+//   this.http.post(`http://localhost:3000/api/orders/confirm-collected/${order.id}`, {
+//     username: this.user.username
+//   }).subscribe({
+//     next: () => {
+//       order.collected = true;
+//       alert('Order marked as collected');
+//     },
+//     error: () => alert('Failed to confirm collection')
+//   });
+// }
 //Method to get Revenue Summary and Unpaid Order sum
 get unpaidCount() {
   return this.filteredOrders.filter(order => order.payment_status == 'Unpaid').length;

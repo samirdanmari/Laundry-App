@@ -52,15 +52,17 @@ table th {
 }
 
 @media print {
-  body {
+  /* body {
     -webkit-print-color-adjust: exact;
-  }
+  } */
 
-  .print-btn,
-  select,
+  .print-btn{
+    display: none !important;
+  }
+  /* select,
   input,
   button:not(.signature-line) {
-    display: none !important;
+    display: none !important; */
   }
 
   .report-card {
@@ -95,4 +97,4 @@ table th {
   @page {
     margin: 20mm;
   }
-}
+

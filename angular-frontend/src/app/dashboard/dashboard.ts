@@ -5,13 +5,12 @@ import { Router } from '@angular/router';
 import { AddOrder } from "../add-order/add-order";
 import { ViewOrders } from "../view-orders/view-orders";
 import { BaseChartDirective } from 'ng2-charts';
-import { AuditLog } from "../audit-log/audit-log";
-
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   standalone: true,
   selector: 'app-dashboard',
-  imports: [FormsModule, CommonModule, AddOrder, ViewOrders, BaseChartDirective, AuditLog],
+  imports: [FormsModule, CommonModule, AddOrder, ViewOrders, BaseChartDirective],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -22,26 +21,10 @@ export class Dashboard implements OnInit {
   showAddOrder = false;
   showDashboardContent = true;
 
-constructor(private router: Router) {}
+constructor(private router: Router, private http: HttpClient) {}
 
 // Chart data for dashboard
-dailyRevenueData = [
-  { data: [2000, 3200, 2800, 4500, 3900], label: 'Daily ₦' }
-];
 
-monthlyLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
-monthlyRevenueData = [
-  { data: [42000, 53000, 47000, 61000, 58000], label: 'Monthly ₦' }
-];
-
-statusLabels = ['Paid', 'Unconfirmed', 'Unpaid'];
-statusRevenueData = [
-  {
-    data: [145000, 12000, 7000],
-    backgroundColor: ['#4CAF50', '#FFC107', '#F44336'],
-    label: 'Revenue Status'
-  }
-];
 
 
 // Method to toggle Add Order form visibility
@@ -85,15 +68,6 @@ ngOnInit() {
   }
 }
 
-// Method to logout user
-logout() {
-  sessionStorage.clear();
-  this.router.navigate(['/']);
-}
-
-
-// Method to check user roles for different functionalities
-
 canAddOrder() {
   return ['Staff', 'Accountant', 'SuperAdmin'].includes(this.role);
 }
@@ -119,6 +93,25 @@ canAuditLog(){
   return this.role === 'SuperAdmin';
 }
 
+// Method to logout user
+logout() {
+  const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+  const loginTime = sessionStorage.getItem('loginTime');
 
+  this.http.post('http://localhost:3000/api/logout', {
+    user,
+    loginTime
+  }).subscribe({
+    next: () => {
+      sessionStorage.clear();
+      this.router.navigate(['/']);
+    },
+    error: () => {
+      alert('Logout failed');
+      sessionStorage.clear();
+      this.router.navigate(['/']);
+    }
+  });
+}
 
 }

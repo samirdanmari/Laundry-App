@@ -22,6 +22,7 @@
         <th>Paid?</th>
         <th>Date</th>
         <th>Expected Collection Date</th>
+        <th>Collected?</th>
       </tr>
     </thead>
     <tbody>
@@ -40,6 +41,14 @@
 </td>
         <td>{{ order.date }}</td>
         <td>{{ order.expected_date }}</td>
+        <td>
+          <span *ngIf="order.collected">Collected✅
+          </span>
+
+         <button *ngIf="!order.collected" (click)="confirmCollected(order)">
+          📦 Confirm Collected
+        </button>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -55,3 +64,4 @@
   [order]="selectedOrder"
   (close)="selectedOrder = null"
 />
+
