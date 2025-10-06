@@ -15,6 +15,29 @@
 .customer-details,section{
   margin-left: 10px;
 }
+.additems{
+  display: flex;
+  flex-direction: row;
+}
+.additems,section{
+  margin-left: 10px;
+}
+#addItemsButton{
+  display: block;
+  float: right;
+  margin: 10px;
+  padding: 10px;
+  color: red;
+}
+
+.paymentInfor{
+  display: flex;
+  flex-direction: row;
+}
+.paymentInfor,section{
+  margin-left:  20px;
+  width: 50%
+}
 .order-form h3 {
   margin-bottom: 20px;
   color: #007bff;
