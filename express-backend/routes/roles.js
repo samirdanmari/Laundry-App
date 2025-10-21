@@ -57,17 +57,17 @@ router.get('/roles', (req, res) => {
   });
 });
 
-// Add a new user role assignment
-router.post('/assign-role', (req, res) => {
-  const { user_id, role_name } = req.body;
-  db.get('SELECT id FROM roles WHERE name = ?', [role_name], (err, role) => {
-    if (!role) return res.status(404).json({ message: 'Role not found' });
-    db.run('INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)', [user_id, role.id], function (err) {
-      if (err) return res.status(500).json({ message: 'Role assignment failed' });
-      res.json({ message: `Assigned role '${role_name}' to user ${user_id}` });
-    });
-  });
-});
+// // Add a new user role assignment
+// router.post('/assign-role', (req, res) => {
+//   const { user_id, role_name } = req.body;
+//   db.get('SELECT id FROM roles WHERE name = ?', [role_name], (err, role) => {
+//     if (!role) return res.status(404).json({ message: 'Role not found' });
+//     db.run('INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)', [user_id, role.id], function (err) {
+//       if (err) return res.status(500).json({ message: 'Role assignment failed' });
+//       res.json({ message: `Assigned role '${role_name}' to user ${user_id}` });
+//     });
+//   });
+// });
 
 router.get('/users-with-roles', (req, res) => {
   db.all(`
@@ -106,9 +106,9 @@ router.get('/user/:id', (req, res) => {
   });
 });
 
-// change user role
+// Change user role
 router.post('/change-role', (req, res) => {
-  const { user_id, new_role } = req.body;
+  const { user_id, new_role, actorId } = req.body;
 
   db.get('SELECT id FROM roles WHERE name = ?', [new_role], (err, role) => {
     if (!role) return res.status(404).json({ message: 'Role not found' });
@@ -116,6 +116,8 @@ router.post('/change-role', (req, res) => {
     db.run('DELETE FROM user_roles WHERE user_id = ?', [user_id], () => {
       db.run('INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)', [user_id, role.id], err => {
         if (err) return res.status(500).json({ message: 'Failed to assign new role' });
+
+        logAudit(actorId, user_id, 'change_role', new_role);
         res.json({ message: 'Role updated successfully' });
       });
     });

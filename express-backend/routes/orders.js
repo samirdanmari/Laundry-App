@@ -85,38 +85,6 @@ router.post('/confirm-collected/:id', (req, res) => {
   });
 });
 
-// router.post('/confirm-collected/:id', (req, res) => {
-//   const id = req.params.id;
-//   // const { actorId } = req.body; // ✅ Pass actorId from frontend
-//   console.log('Confirming order ID:', id);
-
-//   // First, fetch the order to get customer_id
-//   db.get(`SELECT * FROM orders WHERE id = ?`, [id], (err, order) => {
-//     if (err || !order) {
-//       console.error('Order fetch error:', err);
-//       return res.status(500).json({ message: 'Order not found' });
-//     }
-
-//     // Update the order
-//     db.run(`
-//       UPDATE orders
-//       SET collected = 1,
-//           collected_at = datetime('now')
-//       WHERE id = ?
-//     `, [id], function(err) {
-//       if (err) {
-//         console.error('DB error:', err);
-//         return res.status(500).json({ message: 'Failed to confirm collection' });
-//       }
-
-//       // ✅ Log audit after successful update
-//       logAudit(user.id, order.customerName, `Confirmed collection for order #${order.id}`, 'collection');
-
-//       res.json({ message: 'Order marked as collected' });
-//     });
-//   });
-// });
-
 // Comfirming an order Payment
 router.post('/confirm-payment/:id', (req, res) => {
   const { id } = req.params;
