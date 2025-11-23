@@ -90,7 +90,28 @@ db.run(`
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
   )
 `);
-// 
+
+
+// // Create items table if not exists
+db.run(`
+CREATE TABLE IF NOT EXISTS items (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE
+)
+`);
+
+// Items price tables
+db.run(`
+CREATE TABLE IF NOT EXISTS item_prices (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  item_id INTEGER,
+  service_type TEXT CHECK(service_type IN ('Wash & Iron', 'Wash Only', 'Iron Only')),
+  price REAL NOT NULL,
+  FOREIGN KEY (item_id) REFERENCES items(id),
+  UNIQUE(item_id, service_type)
+)
+`);
+
 
 // Tobe uncommented if the collected feature is not shown in the future
 // db.run(`ALTER TABLE orders ADD COLUMN collected INTEGER DEFAULT 0`);

@@ -50,11 +50,113 @@ router.get('/all', (req, res) => {
   });
 }); 
 
+// item and pricing logic
+
+// Get all items
+// router.get('/items', (req, res) => {
+//   db.all('SELECT * FROM items', [], (err, rows) => {
+//     if (err) return res.status(500).json({ message: 'Failed to fetch items' });
+//     res.json(rows);
+//   });
+// });
+// Add or update item with prices
+router.post('/items', (req, res) => {
+  const { name, prices } = req.body;
+
+  if (!name || typeof prices !== 'object') {
+    return res.status(400).json({ message: 'Missing name or prices' });
+  }
+
+  // Step 1: Insert item name (or ignore if exists)
+  db.run('INSERT INTO items (name) VALUES (?) ON CONFLICT(name) DO NOTHING', [name], function (err) {
+    if (err) return res.status(500).json({ message: 'Failed to save item name' });
+
+    // Step 2: Get item ID
+    db.get('SELECT id FROM items WHERE name = ?', [name], (err, item) => {
+      if (err || !item) return res.status(500).json({ message: 'Failed to retrieve item ID' });
+
+      const itemId = item.id;
+      const serviceTypes = ['Wash & Iron', 'Wash Only', 'Iron Only'];
+
+      let completed = 0;
+      serviceTypes.forEach(type => {
+        const price = prices[type] ?? null;
+        if (price === null) {
+          completed++;
+          return;
+        }
+
+        db.run(`
+          INSERT INTO item_prices (item_id, service_type, price)
+          VALUES (?, ?, ?)
+          ON CONFLICT(item_id, service_type) DO UPDATE SET price = excluded.price
+        `, [itemId, type, price], err => {
+          if (err) console.error(`❌ Failed to save price for ${type}:`, err);
+          completed++;
+          if (completed === serviceTypes.length) {
+            res.json({ message: '✅ Item and prices saved successfully' });
+          }
+        });
+      });
+    });
+  });
+});
+
+
+// Get all items with prices
+router.get('/items', (req, res) => {
+  db.all(`
+    SELECT items.id, items.name, item_prices.service_type, item_prices.price
+    FROM items
+    LEFT JOIN item_prices ON items.id = item_prices.item_id
+  `, [], (err, rows) => {
+    if (err) return res.status(500).json({ message: 'Failed to fetch items' });
+
+    const grouped = {};
+    rows.forEach(row => {
+      if (!grouped[row.name]) {
+        grouped[row.name] = { id: row.id, name: row.name, prices: {} };
+      }
+      grouped[row.name].prices[row.service_type] = row.price;
+    });
+
+    res.json(Object.values(grouped));
+  });
+});
+
+
+// Delete item
+router.delete('/items/:id', (req, res) => {
+  db.run('DELETE FROM items WHERE id = ?', [req.params.id], err => {
+    if (err) return res.status(500).json({ message: 'Failed to delete item' });
+    res.json({ message: 'Item deleted' });
+  });
+});
+
+// Get item price map
+router.get('/item-price-map', (req, res) => {
+  db.all(`
+    SELECT items.name AS item, item_prices.service_type, item_prices.price
+    FROM items
+    JOIN item_prices ON items.id = item_prices.item_id
+  `, [], (err, rows) => {
+    if (err) return res.status(500).json({ message: 'Failed to fetch item prices' });
+
+    const map = {};
+    rows.forEach(row => {
+      if (!map[row.item]) map[row.item] = {};
+      map[row.item][row.service_type] = row.price;
+    });
+
+    res.json(map); // Example: { Shirt: { 'Wash & Iron': 500, 'Wash Only': 300 } }
+  });
+});
+
 
 // confirming order complation (COLLECTION)
 router.post('/confirm-collected/:id', (req, res) => {
   const id = req.params.id;
-  const { actorId } = req.body; // ✅ Pass actorId from frontend
+  const { actorId } = req.body;
 
   console.log('Confirming order ID:', id);
 
@@ -108,6 +210,22 @@ db.run(`
     });
     logAudit(user.id, order.customer_id, `Confirmed payment for order #${order.id}`, 'payment');
   });
+
+
+  // Get overdue orders
+  router.get('/overdue-orders', (req, res) => {
+  const today = new Date().toISOString().split('T')[0];
+
+  db.all(`
+    SELECT id, customer_name, room_number, expected_date, payment_status
+    FROM orders
+    WHERE expected_date < ? AND collected = 0
+  `, [today], (err, rows) => {
+    if (err) return res.status(500).json({ message: 'Failed to fetch overdue orders' });
+    res.json(rows);
+  });
+});
+
 
 
   // edit order
