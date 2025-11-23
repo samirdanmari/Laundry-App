@@ -9,12 +9,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './user-management.css'
 })
 export class UserManagement implements OnInit {
-  // username = '';
-  // password = '';
-  // category = 'Staff';
-  // selectedRole = '';
-  // roles: any[] = [];
-    username = '';
+  username = '';
   password = '';
   selectedRole = '';
   roles: any[] = [];
@@ -25,40 +20,12 @@ export class UserManagement implements OnInit {
     this.userService.getRoles().subscribe(data => this.roles = data);
   }
 
-  // addUser() {
-  //   const newUser = {
-  //     username: this.username,
-  //     password: this.password,
-  //     role: this.selectedRole,
-  //     // category: this.category,
-  //     // role_name: this.selectedRole
-  //   };
     addUser() {
     const newUser = {
       username: this.username,
       password: this.password,
       role: this.selectedRole
     };
-
-
-//     this.userService.addUser(newUser).subscribe(res => {
-//       alert(res.message);
-//       this.username = '';
-//       this.password = '';
-//       // this.category = 'Staff';
-//       this.selectedRole = '';
-//       this.ngOnInit(); // Refresh roles after adding a user
-//     }, err => {
-//       console.error('Error adding user:', err);
-//       alert('Failed to add user. Please try again.');
-//       this.username = '';
-//       this.password = '';
-//       // this.category = 'Staff';
-//       this.selectedRole = '';
-//       this.ngOnInit(); // Refresh roles even on error
-//     });
-//   }
-// }
     this.userService.addUser(newUser).subscribe(res => {
       alert(res.message);
       this.username = '';

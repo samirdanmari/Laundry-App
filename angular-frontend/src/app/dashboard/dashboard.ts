@@ -17,14 +17,12 @@ import { HttpClient } from '@angular/common/http';
 export class Dashboard implements OnInit {
   username = '';
   role = '';
+  overdueOrders: any[] = [];
   reportRange: any;
   showAddOrder = false;
   showDashboardContent = true;
 
 constructor(private router: Router, private http: HttpClient) {}
-
-// Chart data for dashboard
-
 
 
 // Method to toggle Add Order form visibility
@@ -51,9 +49,32 @@ goToRoleManagement() {
   this.router.navigate(['/role-management']);
 }
 
+// Method to navigate to order setting
+gotoOrderSettings(){
+  this.router.navigate(['/order-settings']);
+}
+
 gotoAuditLog(){
 this.router.navigate(['/audit-log'])
 }
+
+getOverdueOrders() {
+  return this.http.get<any[]>('http://localhost:3000/api/orders/overdue-orders');
+}
+
+// load overdueorders
+loadOverdueOrders(): void {
+  this.getOverdueOrders().subscribe({
+    next: (orders) => {
+      this.overdueOrders = Array.isArray(orders) ? orders : [];
+    },
+    error: (err) => {
+      console.error('Failed to load overdue orders', err);
+      this.overdueOrders = [];
+    }
+  });
+}
+
 
 ngOnInit() {
   // Get user details from session storage
@@ -66,6 +87,7 @@ ngOnInit() {
   } else {
     this.router.navigate(['/']); // redirect to login if not logged in
   }
+    this.loadOverdueOrders();
 }
 
 canAddOrder() {

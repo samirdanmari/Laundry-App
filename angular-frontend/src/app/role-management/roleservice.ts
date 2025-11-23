@@ -4,60 +4,111 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 
-
 export class Roleservice {
   private baseUrl = 'http://localhost:3000/api/roles';
-    
+
   constructor(private http: HttpClient) {}
 
-    getUsersWithRoles(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/users-with-roles`);
-  }
-    getRoles(): Observable<any[]> {
+  getRoles() {
     return this.http.get<any[]>(`${this.baseUrl}/roles`);
   }
 
-    assignRole(userId: number, roleName: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/assign-role`, {
+  getUsersWithRoles() {
+    return this.http.get<any[]>(`${this.baseUrl}/users-with-roles`);
+  }
+
+  getUserDetails(userId: number) {
+    return this.http.get<any>(`${this.baseUrl}/user/${userId}`);
+  }
+
+  changeRole(userId: number, newRole: string, actorId: number) {
+    return this.http.post(`${this.baseUrl}/change-role`, {
       user_id: userId,
-      role_name: roleName
+      new_role: newRole,
+      actorId
     });
   }
 
-  getUserDetails(userId: number): Observable<any> {
-  return this.http.get(`${this.baseUrl}/user/${userId}`);
+  assignPermission(userId: number, permissionName: string, actorId: number) {
+    return this.http.post(`${this.baseUrl}/assign-permission`, {
+      user_id: userId,
+      permission_name: permissionName,
+      actor_id: actorId
+    });
+  }
+
+  removePermission(userId: number, permissionName: string, actorId: number) {
+    return this.http.post(`${this.baseUrl}/remove-permission`, {
+      user_id: userId,
+      permission_name: permissionName,
+      actor_id: actorId
+    });
+  }
+
+  changePassword(userId: number, newPassword: string) {
+    return this.http.post(`${this.baseUrl}/change-password`, {
+      user_id: userId,
+      new_password: newPassword
+    });
+  }
+
+  deleteUser(userId: number) {
+    return this.http.delete(`${this.baseUrl}/delete-user/${userId}`);
+  }
 }
 
-changeRole(userId: number, newRole: string): Observable<any> {
-  return this.http.post(`${this.baseUrl}/change-role`, { user_id: userId, new_role: newRole });
-}
+// export class Roleservice {
+//   private baseUrl = 'http://localhost:3000/api/roles';
+    
+//   constructor(private http: HttpClient) {}
 
-assignPermission(userId: number, permissionName: string): Observable<any> {
-  return this.http.post(`${this.baseUrl}/assign-permission`, {
-    user_id: userId,
-    permission_name: permissionName
-  });
-}
+//     getUsersWithRoles(): Observable<any[]> {
+//     return this.http.get<any[]>(`${this.baseUrl}/users-with-roles`);
+//   }
+//     getRoles(): Observable<any[]> {
+//     return this.http.get<any[]>(`${this.baseUrl}/roles`);
+//   }
 
-removePermission(userId: number, permissionName: string): Observable<any> {
-  return this.http.post(`${this.baseUrl}/remove-permission`, {
-    user_id: userId,
-    permission_name: permissionName
-  });
-}
+//   getUserDetails(userId: number): Observable<any> {
+//   return this.http.get(`${this.baseUrl}/user/${userId}`);
+// }
 
-
-changePassword(userId: number, newPassword: string): Observable<any> {
-  return this.http.post(`${this.baseUrl}/change-password`, { user_id: userId, new_password: newPassword });
-}
-
-deleteUser(userId: number): Observable<any> {
-  return this.http.delete(`${this.baseUrl}/delete-user/${userId}`);
-}
-
+// // changeRole(userId: number, newRole: string): Observable<any> {
+// //   return this.http.post(`${this.baseUrl}/change-role`, { user_id: userId, new_role: newRole });
+// // }
+//   changeRole(userId: number, newRole: string, actorId: number) {
+//     return this.http.post(`${this.baseUrl}/change-role`, {
+//       user_id: userId,
+//       new_role: newRole,
+//       actorId
+//     });
+//   }
   
 
-}
+// assignPermission(userId: number, permissionName: string): Observable<any> {
+//   return this.http.post(`${this.baseUrl}/assign-permission`, {
+//     user_id: userId,
+//     permission_name: permissionName
+//   });
+// }
+
+// removePermission(userId: number, permissionName: string): Observable<any> {
+//   return this.http.post(`${this.baseUrl}/remove-permission`, {
+//     user_id: userId,
+//     permission_name: permissionName
+//   });
+// }
+
+
+// changePassword(userId: number, newPassword: string): Observable<any> {
+//   return this.http.post(`${this.baseUrl}/change-password`, { user_id: userId, new_password: newPassword });
+// }
+
+// deleteUser(userId: number): Observable<any> {
+//   return this.http.delete(`${this.baseUrl}/delete-user/${userId}`);
+// }
+
+
 
 
 

@@ -20,9 +20,10 @@ export class MainLayout implements OnInit {
      window.location.href = '/dashboard'; // Or use router.navigate(['/']);
   }
 
+
   logout() {
     sessionStorage.clear();
-    window.location.href = '/'; // Or use router.navigate(['/']);
+    window.location.href = '/';
   }
 }
 

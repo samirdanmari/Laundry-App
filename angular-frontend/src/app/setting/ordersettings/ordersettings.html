@@ -1,0 +1,55 @@
+<div class="item-settings">
+<h2>🧾 Item Settings</h2>
+
+<table>
+  <thead>
+    <tr><th>Name</th><th>Wash & Iron</th><th>Wash Only</th><th>Iron Only</th></tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of items">
+      <td>{{ item.name }}</td>
+      <td>{{ item.prices['Wash & Iron'] | currency:'₦' }}</td>
+      <td>{{ item.prices['Wash Only'] | currency:'₦'  }}</td>
+      <td>{{ item.prices['Iron Only'] | currency:'₦' }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Add / Update Item</h3>
+<input [(ngModel)]="newItem.name" placeholder="Item name" />
+
+<label>Wash & Iron</label>
+<input type="number" [(ngModel)]="newItem.prices['Wash & Iron']" />
+
+<label>Wash Only</label>
+<input type="number" [(ngModel)]="newItem.prices['Wash Only']" />
+
+<label>Iron Only</label>
+<input type="number" [(ngModel)]="newItem.prices['Iron Only']" />
+
+<button (click)="saveItem()">Save</button>
+</div>
+<!-- <div class="item-settings">
+
+<h2>🧾 Item Settings</h2>
+
+<table>
+  <thead>
+    <tr><th>Name</th><th>Category</th><th>Price</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of items">
+      <td>{{ item.name }}</td>
+      <td>{{ item.category }}</td>
+      <td>{{ item.price | currency }}</td>
+      <td><button (click)="deleteItem(item.id)">🗑️</button></td>
+    </tr>/
+  </tbody>
+</table>
+
+<h3>Add / Update Item</h3>
+<input [(ngModel)]="newItem.name" placeholder="Item name" />
+<input [(ngModel)]="newItem.category" placeholder="Category (optional)" />
+<input [(ngModel)]="newItem.price" type="number" placeholder="Price" />
+<button (click)="saveItem()">Save</button>
+</div> -->

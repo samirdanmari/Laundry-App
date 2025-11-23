@@ -1,17 +1,13 @@
 <div class="dashboard">
-  <!-- <div class="top-bar">
-    <span>Welcome, {{ username }} ({{ role }})</span>
-    <button (click)="logout()">🚪 Logout</button>
-  </div> -->
 
-  <h2>🧺 Laundry Dashboard</h2>
+  <h2>🧺 Laundry Dashboard</h2>     
 
   <div class="dashboard-actions">
     <!-- Add Order -->
     <button *ngIf="canAddOrder()" (click)="toggleAddOrder()">➕ Add Order</button>
 
     <!-- Confirm Payment -->
-    <button *ngIf="canConfirmPayment()">💳 Confirm Payment</button>
+    <button *ngIf="role=== 'SuperAdmin'" (click)="gotoOrderSettings()">Order Settings</button>
 
     <!-- Assign Roles -->
     <button *ngIf="role === 'SuperAdmin'" (click)="goToRoleManagement()">🛡️ Manage Users</button>
@@ -23,8 +19,7 @@
     <button *ngIf="canGenerateReport()" (click)="goToSalesReport()">📊 Sales Report by Date</button>
 
     <!-- Audit Log -->
-      <button  *ngIf="role === 'SuperAdmin'" (click)="gotoAuditLog()">View Audit-log</button>
-
+    <button  *ngIf="role === 'SuperAdmin'" (click)="gotoAuditLog()">View Audit-log</button>
   </div>
 
   <!-- Embedded Add Order Card -->

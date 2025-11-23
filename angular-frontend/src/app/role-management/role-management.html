@@ -1,6 +1,5 @@
 <div class="role-manager">
   <h2>👥 User Role Management</h2>
-
   <table>
     <thead>
       <tr>
@@ -38,8 +37,9 @@
     <p><strong>Role:</strong> {{ selectedUser.role }}</p>
     <p><strong>Permissions:</strong> {{ selectedUser.permissions.join(', ') || 'None' }}</p>
 
-    <label>Change Role</label>
-    <select [(ngModel)]="selectedUser.role">
+        <!-- Change Role -->
+    <label for="roleSelect">Change Role</label>
+    <select id="roleSelect" [(ngModel)]="selectedUser.role">
       <option *ngFor="let role of availableRoles" [value]="role.name">{{ role.name }}</option>
     </select>
     <button (click)="changeUserRole()">Update Role</button>

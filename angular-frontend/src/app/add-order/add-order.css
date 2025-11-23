@@ -181,6 +181,10 @@
   background: #0056b3;
 }
 
+button{
+  margin-left: 10px;
+}
+
 /* Print Only Styles */
 @media print {
   body * {
